@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="title">Online Chatbot</div>
+        <div class="form">
+            <div class="bot-inbox inbox">
+                <div class="icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="msg-header">
+                    <p>Hello there, how can I help you?</p>
+                </div>
+            </div>
+        </div>
+        <div class="typing-field">
+            <div class="input-data">
+                <input id="data" type="text" placeholder="Type something here.." required>
+                <button id="send-btn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sendBtn = document.getElementById('send-btn');
+            const inputField = document.getElementById('data');
+            const form = document.querySelector('.form');
+            
+            // Function to handle sending messages
+            function sendMessage() {
+                const message = inputField.value.trim();
+                if (message === '') return;
+                
+                // Add user message to chat
+                const userHtml = `
+                    <div class="user-inbox inbox">
+                        <div class="msg-header">
+                            <p>${message}</p>
+                        </div>
+                    </div>
+                `;
+                form.insertAdjacentHTML('beforeend', userHtml);
+                inputField.value = '';
+                
+                // Scroll to bottom of chat
+                form.scrollTop = form.scrollHeight;
+                
+                // Show typing animation
+                const typingHtml = `
+                    <div class="bot-inbox inbox typing-animation">
+                        <div class="icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="msg-header">
+                            <p>Typing...</p>
+                        </div>
+                    </div>
+                `;
+                form.insertAdjacentHTML('beforeend', typingHtml);
+                form.scrollTop = form.scrollHeight;
+                
+                // Process the response (simulate delay)
+                setTimeout(() => {
+                    // Remove typing animation
+                    const typingElement = document.querySelector('.typing-animation');
+                    if (typingElement) {
+                        typingElement.remove();
+                    }
+                    
+                    // Get bot response based on user message
+                    const botResponse = getBotResponse(message);
+                    
+                    // Add bot response to chat
+                    const botHtml = `
+                        <div class="bot-inbox inbox">
+                            <div class="icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="msg-header">
+                                <p>${botResponse}</p>
+                            </div>
+                        </div>
+                    `;
+                    form.insertAdjacentHTML('beforeend', botHtml);
+                    
+                    // Scroll to bottom of chat
+                    form.scrollTop = form.scrollHeight;
+                }, 1000);
+            }
+            
+            // Function to get bot response based on user input
+            function getBotResponse(message) {
+                message = message.toLowerCase();
+                
+                if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+                    return "Hello! How can I assist you today?";
+                } else if (message.includes('how are you')) {
+                    return "I'm just a computer program, but I'm functioning well! How can I help you?";
+                } else if (message.includes('bye') || message.includes('goodbye')) {
+                    return "Goodbye! Feel free to come back if you have more questions.";
+                } else if (message.includes('thank')) {
+                    return "You're welcome! Is there anything else I can help with?";
+                } else if (message.includes('help')) {
+                    return "I can help with information about our services, account management, or general inquiries. What specifically do you need help with?";
+                } else if (message.includes('account') || message.includes('profile')) {
+                    return "You can manage your account settings by going to the profile page. Would you like me to direct you there?";
+                } else if (message.includes('password')) {
+                    return "To change your password, go to the account settings page. Would you like instructions on how to reset your password?";
+                } else if (message.includes('services') || message.includes('what do you offer')) {
+                    return "We offer a variety of services including account management, data analytics, and personalized recommendations. Which service are you interested in learning more about?";
+                } else if (message.includes('contact') || message.includes('support')) {
+                    return "You can reach our support team at support@example.com or call us at (123) 456-7890 during business hours.";
+                } else if (message.includes('hours') || message.includes('when are you open')) {
+                    return "Our online services are available 24/7. Our support team is available Monday through Friday, 9 AM to 5 PM EST.";
+                } else {
+                    return "I'm not sure I understand. Could you please rephrase your question or ask something else?";
+                }
+            }
+            
+            // Event listener for send button click
+            sendBtn.addEventListener('click', sendMessage);
+            
+            // Event listener for Enter key press
+            inputField.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

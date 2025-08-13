@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InboxGuard - Email Spam Classifier</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar (Hidden until login) -->
+    <nav id="navbar" class="navbar hidden">
+        <div class="container">
+            <div class="navbar-brand">
+                <i class="fas fa-shield-alt"></i>
+                <span>InboxGuard</span>
+            </div>
+            <div class="navbar-menu">
+                <a href="#" class="navbar-item" id="home-link">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#profile-section" class="navbar-item">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#spam-detector-section" class="navbar-item">
+                    <i class="fas fa-filter"></i>
+                    <span>Spam Detector</span>
+                </a>
+                <a href="#contact-section" class="navbar-item">
+                    <i class="fas fa-phone"></i>
+                    <span>Contact</span>
+                </a>
+                <button id="theme-toggle" class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="logout-btn" class="navbar-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section id="login-section" class="section">
+        <div class="container">
+            <div class="auth-tabs">
+                <button id="login-tab" class="auth-tab active">Login</button>
+                <button id="signup-tab" class="auth-tab">Sign Up</button>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="login-form-container" class="card login-card">
+                <div class="card-header text-center">
+                    <div class="icon-container">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h2 class="card-title">Secure Login</h2>
+                    <p class="card-description">Enter your credentials to access the Email Spam Classifier</p>
+                </div>
+                <div class="card-content">
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" placeholder="you@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" required>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="login-remember">
+                            <label for="login-remember">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    </form>
+                    <div class="auth-footer">
+                        <p>Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sign Up Form -->
+            <div id="signup-form-container" class="card login-card hidden">
+                <div class="card-header text-center">
+                    <div class="icon-container">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h2 class="card-title">Create Account</h2>
+                    <p class="card-description">Sign up to use our Email Spam Classifier</p>
+                </div>
+                <div class="card-content">
+                    <form id="signup-form">
+                        <div class="form-group">
+                            <label for="signup-name">Full Name</label>
+                            <input type="text" id="signup-name" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email">Email</label>
+                            <input type="email" id="signup-email" placeholder="you@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <input type="password" id="signup-password" required>
+                            <div class="password-strength">
+                                <div class="strength-meter" id="password-strength-meter"></div>
+                                <span id="password-strength-text">Password strength</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-confirm-password">Confirm Password</label>
+                            <input type="password" id="signup-confirm-password" required>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="signup-terms" required>
+                            <label for="signup-terms">I agree to the <a href="#">Terms and Conditions</a></label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                    </form>
+                    <div class="auth-footer">
+                        <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Application (Hidden until login) -->
+    <div id="app-container" class="hidden">
+        <!-- Profile Section -->
+        <section id="profile-section" class="section profile-section">
+            <div class="container">
+                <h2 class="text-center mb-8">Your Profile</h2>
+                
+                <div class="profile-container">
+                    <div class="card profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                <div class="avatar-placeholder">
+                                    <i class="fas fa-user"></i>
+                                    <div class="avatar-upload">
+                                        <i class="fas fa-camera"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="profile-info">
+                                <h2 id="profile-name">John Doe</h2>
+                                <p id="profile-email">john@example.com</p>
+                                <div class="profile-badges">
+                                    <span class="profile-badge"><i class="fas fa-shield-alt"></i> Verified</span>
+                                    <span class="profile-badge"><i class="fas fa-star"></i> Premium</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="profile-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value">24</span>
+                                    <span class="stat-label">Scans</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">18</span>
+                                    <span class="stat-label">Spam Detected</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">6</span>
+                                    <span class="stat-label">Safe Emails</span>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-details">
+                                <h3 class="mb-4">Account Details</h3>
+                                <div class="detail-item">
+                                    <div class="detail-label"><i class="fas fa-calendar"></i> Joined</div>
+                                    <div class="detail-value">March 15, 2023</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label"><i class="fas fa-clock"></i> Last Login</div>
+                                    <div class="detail-value">Today at 10:45 AM</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label"><i class="fas fa-globe"></i> Location</div>
+                                    <div class="detail-value" id="profile-location">New York, USA</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label"><i class="fas fa-bell"></i> Notifications</div>
+                                    <div class="detail-value">
+                                        <label class="switch">
+                                            <input type="checkbox" checked id="notifications-toggle">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-actions">
+                                <a href="edit-profile.html" class="btn btn-primary">
+                                    <i class="fas fa-edit"></i> Edit Profile
+                                </a>
+                                <a href="edit-password.html" class="btn btn-outline">
+                                    <i class="fas fa-key"></i> Change Password
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card security-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Security Status</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="security-score">
+                                <div class="score-circle">
+                                    <svg viewBox="0 0 36 36" class="circular-chart">
+                                        <path class="circle-bg" d="M18 2.0845
+                                            a 15.9155 15.9155 0 0 1 0 31.831
+                                            a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                        <path class="circle" stroke-dasharray="85, 100" d="M18 2.0845
+                                            a 15.9155 15.9155 0 0 1 0 31.831
+                                            a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                        <text x="18" y="20.35" class="percentage">85%</text>
+                                    </svg>
+                                </div>
+                                <div class="score-info">
+                                    <h3>Security Score</h3>
+                                    <p>Your account security is good, but could be improved.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="security-recommendations">
+                                <h4>Recommendations</h4>
+                                <ul class="recommendation-list">
+                                    <li class="completed">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Use a strong password</span>
+                                    </li>
+                                    <li class="completed">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Verify your email</span>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <span>Enable two-factor authentication</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spam Detector Section -->
+        <section id="spam-detector-section" class="section spam-detector-section">
+            <div class="container">
+                <h2 class="text-center mb-8">Email Spam Detector</h2>
+                
+                <div class="spam-detector-container">
+                    <div class="card detector-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Check Your Email</h2>
+                            <p class="card-description">Paste your email content below to check if it's spam</p>
+                        </div>
+                        <div class="card-content">
+                            <form id="spam-detector-form">
+                                <div class="form-group">
+                                    <label for="email-subject">Email Subject</label>
+                                    <input type="text" id="email-subject" placeholder="Enter email subject">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email-content">Email Content</label>
+                                    <textarea id="email-content" rows="8" placeholder="Paste your email content here..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-search"></i> Analyze Email
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="card info-card">
+                        <div class="card-header">
+                            <h2 class="card-title">About Spam Detector</h2>
+                        </div>
+                        <div class="card-content">
+                            <p>Our advanced spam detection system uses machine learning algorithms to identify potentially harmful or unwanted emails.</p>
+                            
+                            <h4 class="mt-6 mb-4">How It Works</h4>
+                            <ul class="feature-list">
+                                <li>
+                                    <i class="fas fa-check"></i>
+                                    <span>Analyzes email content and subject lines</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check"></i>
+                                    <span>Identifies suspicious links and attachments</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check"></i>
+                                    <span>Detects phishing attempts and scams</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check"></i>
+                                    <span>Provides a risk score and detailed analysis</span>
+                                </li>
+                            </ul>
+                            
+                            <div class="accuracy-meter mt-6">
+                                <h4>Detection Accuracy</h4>
+                                <div class="meter-container">
+                                    <div class="meter-bar">
+                                        <div class="meter-fill" style="width: 97%"></div>
+                                    </div>
+                                    <div class="meter-label">97% Accurate</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Results Section (Hidden until analysis) -->
+                <div id="analysis-results" class="analysis-results hidden">
+                    <div class="card result-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Analysis Results</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="result-summary">
+                                <div class="result-icon safe">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="result-details">
+                                    <h3 id="result-status">Safe Email</h3>
+                                    <p id="result-description">This email appears to be legitimate and safe.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="result-metrics">
+                                <div class="metric">
+                                    <div class="metric-label">Spam Score</div>
+                                    <div class="metric-value" id="spam-score">5%</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-label">Phishing Risk</div>
+                                    <div class="metric-value" id="phishing-risk">Low</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-label">Malware Risk</div>
+                                    <div class="metric-value" id="malware-risk">None</div>
+                                </div>
+                            </div>
+                            
+                            <div class="result-details-section">
+                                <h4>Detailed Analysis</h4>
+                                <ul class="analysis-list" id="analysis-details">
+                                    <li class="safe">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>No suspicious links detected</span>
+                                    </li>
+                                    <li class="safe">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>No urgent requests for personal information</span>
+                                    </li>
+                                    <li class="safe">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Sender domain is legitimate</span>
+                                    </li>
+                                    <li class="warning">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <span>Contains some promotional content</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact-section" class="section contact-section">
+            <div class="container">
+                <h2 class="text-center mb-8">Contact Us</h2>
+                
+                <div class="contact-container">
+                    <div class="card contact-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Get in Touch</h2>
+                            <p class="card-description">Have questions or feedback? We'd love to hear from you.</p>
+                        </div>
+                        <div class="card-content">
+                            <form id="contact-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="contact-name">Your Name</label>
+                                        <input type="text" id="contact-name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contact-email">Your Email</label>
+                                        <input type="email" id="contact-email" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-subject">Subject</label>
+                                    <input type="text" id="contact-subject" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-message">Message</label>
+                                    <textarea id="contact-message" rows="6" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-paper-plane"></i> Send Message
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="card info-card">
+                        <div class="card-header">
+                            <h2 class="card-title">Contact Information</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="contact-info">
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <h4>Address</h4>
+                                        <p>123 Security Street, Cyber City, CA 94103</p>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <h4>Email</h4>
+                                        <p>support@inboxguard.com</p>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fas fa-phone-alt"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <h4>Phone</h4>
+                                        <p>+1 (555) 123-4567</p>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <h4>Hours</h4>
+                                        <p>Monday - Friday: 9AM - 5PM</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Chatbot Button -->
+    <div id="chatbot-button" class="chatbot-button hidden">
+        <button id="open-chat" class="chat-toggle">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+    </div>
+
+    <!-- Chatbot Interface -->
+    <div id="chatbot-interface" class="chatbot-interface hidden">
+        <div class="chatbot-header">
+            <h3><i class="fas fa-robot"></i> InboxGuard Assistant</h3>
+            <button id="close-chat" class="close-chat">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="chat-messages">
+            <div class="message bot-message">
+                <div class="message-content">
+                    Hello! I'm your InboxGuard assistant. How can I help you today?
+                </div>
+                <div class="message-time">Just now</div>
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chat-input" placeholder="Type your message...">
+            <button id="send-message">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
